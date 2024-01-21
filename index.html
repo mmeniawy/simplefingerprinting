@@ -27,6 +27,10 @@
             isMobile: isMobileDevice(),
             mobileModel: getMobileModel(),
             plugins: getPlugins(),
+            carrier: getCarrier(),
+            osVersion: getOSVersion(),
+            buildNumber: getBuildNumber(),
+            networkType: getNetworkType(),
             devicePixelRatio: window.devicePixelRatio,
             cookiesEnabled: navigator.cookieEnabled,
             doNotTrack: navigator.doNotTrack || navigator.msDoNotTrack || 'unspecified',
@@ -114,6 +118,23 @@
             geolocation: 'geolocation' in navigator,
             webSockets: 'WebSocket' in window,
         };
+    }
+
+    function getCarrier() {
+        return navigator.connection ? navigator.connection.effectiveType : 'Unknown';
+    }
+
+    function getNetworkType() {
+        return navigator.connection ? navigator.connection.type : 'Unknown';
+    }
+
+    function getBuildNumber() {
+        return navigator.userAgent.includes('iPhone') ? navigator.userAgent.match(/Build\/(\S+)/)[1] : 'N/A';
+    }
+
+    function getOSVersion() {
+        var match = navigator.userAgent.match(/(Android|iPhone OS|iPad OS) ([\d_]+)/);
+        return match ? match[2].replace(/_/g, '.') : 'Unknown';
     }
 
     // Call the function to collect extended device fingerprint when the page loads
