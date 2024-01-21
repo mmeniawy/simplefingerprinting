@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extended Device Fingerprint</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+</head>
+<body>
+
+<script>
+    // Function to collect extended device information
+    function collectExtendedDeviceFingerprint() {
+        var fingerprintData = {
+            userAgent: navigator.userAgent,
+            language: navigator.language,
+            platform: navigator.platform,
+            screenWidth: window.screen.width,
+            screenHeight: window.screen.height,
+            colorDepth: window.screen.colorDepth,
+            timezoneOffset: new Date().getTimezoneOffset(),
+            isMobile: isMobileDevice(),
+            mobileModel: getMobileModel(),
+            plugins: getPlugins(),
+            devicePixelRatio: window.devicePixelRatio,
+            cookiesEnabled: navigator.cookieEnabled,
+            doNotTrack: navigator.doNotTrack || navigator.msDoNotTrack || 'unspecified',
+            online: navigator.onLine,
+            screenOrientation: getScreenOrientation(),
+            batteryLevel: getBatteryLevel(),
+            availableScreenResolution: getAvailableScreenResolution(),
+            hardwareConcurrency: navigator.hardwareConcurrency,
+            browserFeatures: getBrowserFeatures(),
+        };
+
+        // Convert the fingerprint data to a JSON string
+        var fingerprintString = JSON.stringify(fingerprintData);
+
+        // Create a SHA-1 hash of the fingerprint data using crypto-js
+        var sha1Hash = CryptoJS.SHA1(fingerprintString).toString();
+
+        // You can send the hash to your server using an HTTP call (e.g., AJAX)
+        // Example: sendToServer(sha1Hash);
+
+		alert(fingerprintString);
+		alert(sha1Hash);
+        console.log(sha1Hash);
+    }
+
+    // Function to check if the device is a mobile device
+    function isMobileDevice() {
+        return /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // Function to get the mobile device model
+    function getMobileModel() {
+        var model = "Unknown";
+        if (/iPhone/i.test(navigator.userAgent)) {
+            model = "iPhone";
+        } else if (/iPad/i.test(navigator.userAgent)) {
+            model = "iPad";
+        } else if (/Android/i.test(navigator.userAgent)) {
+            var match = navigator.userAgent.match(/Android\s([^\s;]+)/);
+            if (match) {
+                model = match[1];
+            }
+        }
+        return model;
+    }
+
+    // Function to get a list of browser plugins
+    function getPlugins() {
+        var plugins = [];
+        if (navigator.plugins) {
+            for (var i = 0; i < navigator.plugins.length; i++) {
+                plugins.push({
+                    name: navigator.plugins[i].name,
+                    filename: navigator.plugins[i].filename
+                });
+            }
+        }
+        return plugins;
+    }
+
+    // Function to get the screen orientation
+    function getScreenOrientation() {
+        return screen.orientation ? screen.orientation.type : window.orientation;
+    }
+
+    // Function to get the battery level
+    function getBatteryLevel() {
+        return navigator.getBattery ? navigator.getBattery().then(battery => battery.level) : 'N/A';
+    }
+
+    // Function to get the available screen resolution
+    function getAvailableScreenResolution() {
+        return window.screen.availWidth + 'x' + window.screen.availHeight;
+    }
+
+    // Function to get browser features
+    function getBrowserFeatures() {
+        return {
+            localStorage: 'localStorage' in window,
+            sessionStorage: 'sessionStorage' in window,
+            indexedDB: 'indexedDB' in window,
+            serviceWorker: 'serviceWorker' in navigator,
+            webWorkers: 'Worker' in window,
+            geolocation: 'geolocation' in navigator,
+            webSockets: 'WebSocket' in window,
+        };
+    }
+
+    // Call the function to collect extended device fingerprint when the page loads
+    collectExtendedDeviceFingerprint();
+</script>
+
+</body>
+</html>
