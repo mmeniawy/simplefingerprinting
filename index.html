@@ -12,6 +12,10 @@
 <script>
     // Function to collect extended device information
     function collectExtendedDeviceFingerprint() {
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var referrerKey = urlParams.get('referrer');
+
         var fingerprintData = {
             userAgent: navigator.userAgent,
             language: navigator.language,
@@ -32,6 +36,7 @@
             availableScreenResolution: getAvailableScreenResolution(),
             hardwareConcurrency: navigator.hardwareConcurrency,
             browserFeatures: getBrowserFeatures(),
+            referrerKey: referrerKey
         };
 
         // Convert the fingerprint data to a JSON string
